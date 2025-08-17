@@ -1,0 +1,105 @@
+/**
+ *    author: Noman
+**/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll ;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+#define pan cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);
+// define values.
+#define MOD 1000000007
+#define PI 3.1415926535897932384626
+/* Bit-Stuff */
+#define get_set_bits(a) (__builtin_popcount(a))
+#define get_set_bitsll(a) ( __builtin_popcountll(a))
+#define get_trail_zero(a) (__builtin_ctz(a))
+#define get_lead_zero(a) (__builtin_clz(a))
+#define get_parity(a) (__builtin_parity(a))
+/*  Abbrevations  */
+#define ff first
+#define ss second
+#define mp make_pair
+#define pb push_back
+#define Endl "\n"
+// loops
+#define forin(arr,n) for(ll i=0;i<n;i++) cin>>arr[i];
+// sort
+#define all(V) (V).begin(),(V).end()
+#define srt(V) sort(all(V))
+#define srtGreat(V) sort(all(V),greater<ll>())
+
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+// O(n) lagbe DFS a 
+// O(q) lagbe query te
+// query er vitore abr amk paresent gulo ber korte hobe tai O(q*n); 
+
+const int N = 2e5+3;
+vector<int> adj[N];
+vector<int> parent(N);
+
+void dfs(int node, int p){
+    parent[node] = p; // protita node er parent track rakha
+
+    for(auto it : adj[node]){
+        if(it != p){
+            dfs(it,node);
+        }
+    }
+}
+
+vector<int> path(int node){ // ekta node theke parent track korte korte ekdom upore -1 porjonto jete hobe 
+    vector<int> ans;
+    while(node != -1){
+        ans.pb(node);
+        node = parent[node];
+    }
+    reverse(all(ans));
+    return ans;
+}
+
+void solve() {
+    int m,q;
+    cin>>m>>q;
+    for(int i=2; i<=m; i++){
+        int x;
+        cin>>x;
+        adj[i].pb(x);
+        adj[x].pb(i);
+    }
+    dfs(1,-1);
+
+    while(q--){
+        int a,b;
+        cin>>a>>b;
+        vector<int> path_a = path(a);
+        vector<int> path_b = path(b);
+        int LCA = -1;
+        for(int i=0; i<min(path_a.size(),path_b.size()); i++){ // min length ta niye amra common parent gulo dekhbo and common last parent ber korbo, eita e LCA
+            if(path_a[i] == path_b[i]){
+                LCA = path_a[i];
+            }
+            else break;
+        }
+        cout<<LCA<<Endl;
+    }
+}
+
+
+
+int32_t main() {
+    fastio;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    int t = 1;
+    //cin >> t;
+
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
