@@ -32,7 +32,7 @@ typedef vector<ll> vl;
 #define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 
 
-ll expo(ll base, ll pow) {
+ll expo(ll base, ll pow) { // // O(log n)
     base = base % MOD; // agei MOD kore nite hobe
     ll res = 1;
     while (pow > 0) {
