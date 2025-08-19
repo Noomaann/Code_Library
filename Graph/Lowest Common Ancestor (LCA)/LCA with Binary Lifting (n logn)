@@ -1,0 +1,122 @@
+/**
+ *    author: Noman
+**/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll ;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+#define pan cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);
+// define values.
+#define MOD 1000000007
+#define PI 3.1415926535897932384626
+/* Bit-Stuff */
+#define get_set_bits(a) (__builtin_popcount(a))
+#define get_set_bitsll(a) ( __builtin_popcountll(a))
+#define get_trail_zero(a) (__builtin_ctz(a))
+#define get_lead_zero(a) (__builtin_clz(a))
+#define get_parity(a) (__builtin_parity(a))
+/*  Abbrevations  */
+#define ff first
+#define ss second
+#define mp make_pair
+#define pb push_back
+#define Endl "\n"
+// loops
+#define forin(arr,n) for(ll i=0;i<n;i++) cin>>arr[i];
+// sort
+#define all(V) (V).begin(),(V).end()
+#define srt(V) sort(all(V))
+#define srtGreat(V) sort(all(V),greater<ll>())
+
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+
+const int N = 2e5+3;
+const int LOG = 20;
+int up[N][LOG];
+int depth[N];
+vector<int> adj[N];
+
+void dfs(int node, int p){
+    up[node][0] = p; // immediate parent
+
+    for(int i=1; i<LOG; i++){
+        if(up[node][i-1] != -1){
+            up[node][i] = up[ up[node][i-1] ][i-1]; // node er ancestor er ancestor, eivabe kore joto upore jawa jay shob gulo ber kore rakhtesi
+        }
+        else up[node][i] = -1;
+    }
+
+    for(auto it : adj[node]){
+        if(it != p){
+            depth[it] = depth[node]+1;
+            dfs(it,node);
+        }
+    }
+}
+
+int lift(int node, int k){ // node ke k poriman upore lift korabo
+    for(int i=0; i<LOG; i++){
+        if(k & (1<<i)){ // k er binary representation a j-th bit set ache kina 
+            node = up[node][i];
+        }
+    }
+    return node;
+}
+
+int LCA(int a, int b){
+    if(depth[a] < depth[b]){ // a choto thakle swap kore nilam jeno boro depth ta choto depth er soman korte pari
+        swap(a,b);
+    }
+
+    a = lift(a,depth[a]-depth[b]); // Step 1: make depth equal
+
+    if(a == b) return a; 
+
+    for(int i=LOG-1; i>=0; i--){  // Step 2: jump together from high to low
+        if(up[a][i] !=  up[b][i]){
+            a = up[a][i];
+            b = up[b][i];
+        }
+    }
+
+    return up[a][0]; // parent of a (or b)
+}
+
+
+void solve() {
+    int m,q;
+    cin>>m>>q;
+    for(int i=2; i<=m; i++){
+        int x;
+        cin>>x;
+        adj[i].pb(x);
+        adj[x].pb(i);
+    }
+    depth[1] = 0;
+    dfs(1,-1);
+    while(q--){
+        int a,b;
+        cin>>a>>b;
+        cout<<LCA(a,b)<<Endl;
+    }
+}
+
+
+
+int32_t main() {
+    fastio;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    int t = 1;
+    //cin >> t;
+
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
