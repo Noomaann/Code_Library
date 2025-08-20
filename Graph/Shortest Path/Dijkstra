@@ -1,0 +1,98 @@
+/**
+ *    author: Noman
+**/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll ;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+#define pan cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);
+// define values.
+#define MOD 1000000007
+#define PI 3.1415926535897932384626
+/* Bit-Stuff */
+#define get_set_bits(a) (__builtin_popcount(a))
+#define get_set_bitsll(a) ( __builtin_popcountll(a))
+#define get_trail_zero(a) (__builtin_ctz(a))
+#define get_lead_zero(a) (__builtin_clz(a))
+#define get_parity(a) (__builtin_parity(a))
+/*  Abbrevations  */
+#define ff first
+#define ss second
+#define mp make_pair
+#define pb push_back
+#define Endl "\n"
+// loops
+#define forin(arr,n) for(ll i=0;i<n;i++) cin>>arr[i];
+// sort
+#define all(V) (V).begin(),(V).end()
+#define srt(V) sort(all(V))
+#define srtGreat(V) sort(all(V),greater<ll>())
+
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+const ll N = 2e5+3;
+const ll inf = 1e18;
+vector<pair<ll,ll>> adj[N];
+vector<ll> dis(N);
+vector<bool> vis(N);
+
+void dijkstra(ll source){
+    priority_queue<pair<ll,ll>, vector<pair<ll,ll>>, greater<pair<ll,ll>>> pq;
+    dis[source] = 0;
+    pq.push({0,source}); // Queue te kintu eivabe push hobe {weight,node}
+    
+    while(!pq.empty()){
+        auto cur = pq.top();
+        pq.pop();
+        ll d = cur.first;
+        ll v = cur.second;
+
+        if(vis[v]) continue; // ekbar jeita Queue theke ber hoyeche sheta r Queue te push korbo na 
+        vis[v] = true;
+
+        for(pair<ll,ll> p : adj[v]){
+            ll to = p.first;  // ei node a jabo
+            ll w = p.second;  // ei node er weight
+            if(dis[v] + w < dis[to]){
+                dis[to] = dis[v] + w;
+                pq.push({dis[to], to});
+            }
+        }
+    }
+}
+
+void solve() {
+    ll n,m;
+    cin>>n>>m;
+    dis.assign(n+1,inf);
+    vis.assign(n+1,false);
+
+    for(int i=0; i<m; i++){
+        ll u,v,w;
+        cin>>u>>v>>w;
+        adj[u].pb({v,w});
+    }
+
+    dijkstra(1);
+
+    for(int i=1; i<=n; i++){
+        cout<<dis[i]<<" ";
+    }
+}
+
+int32_t main() {
+    fastio;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    int t = 1;
+    //cin >> t;
+
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
