@@ -1,0 +1,99 @@
+/**
+ *    author: Noman
+**/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll ;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+#define pan cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);
+// define values.
+#define MOD 1000000007
+#define PI 3.1415926535897932384626
+/* Bit-Stuff */
+#define get_set_bits(a) (__builtin_popcount(a))
+#define get_set_bitsll(a) ( __builtin_popcountll(a))
+#define get_trail_zero(a) (__builtin_ctz(a))
+#define get_lead_zero(a) (__builtin_clz(a))
+#define get_parity(a) (__builtin_parity(a))
+/*  Abbrevations  */
+#define ff first
+#define ss second
+#define mp make_pair
+#define pb push_back
+#define Endl "\n"
+// loops
+#define forin(arr,n) for(ll i=0;i<n;i++) cin>>arr[i];
+// sort
+#define all(V) (V).begin(),(V).end()
+#define srt(V) sort(all(V))
+#define srtGreat(V) sort(all(V),greater<ll>())
+
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+
+struct edge {
+    ll u, v, w;
+};
+
+void solve() {
+    ll n, m;
+    cin >> n >> m;
+
+    vector<edge> edges;
+    for (ll i = 0; i < m; i++) {
+        ll u, v, w;
+        cin >> u >> v >> w;
+        edges.push_back({u, v, w});
+    }
+
+    vector<ll> dis(n + 1, LLONG_MAX);
+    dis[1] = 0; // source node = 1
+
+    // Relax edges n-1 times
+    for (ll i = 1; i <= n - 1; i++) {
+        for (auto e : edges) { // protita edge er jonno check
+            if (dis[e.u] != LLONG_MAX && dis[e.u] + e.w < dis[e.v]) {
+                dis[e.v] = dis[e.u] + e.w; // updated distance
+            }
+        }
+    }
+
+    // note : positive cycle thakle Bellman-Ford kaj korbe karon tokhn shortest distance stable thakbe
+    // Negative cycle check
+    bool cycle = false;
+    for (auto e : edges) {
+        if (dis[e.u] != LLONG_MAX && dis[e.u] + e.w < dis[e.v]) {
+            cycle = true;
+            break;
+        }
+    }
+
+    if (cycle)  cout << "Graph a negative cycle ache" << Endl;
+
+    else {
+        for (ll i = 1; i <= n; i++) {
+            if (dis[i] == LLONG_MAX)
+                cout << "source theke node " << i << " te jawar path nei" << Endl;
+            else
+                cout << "Distance from 1 to " << i << " = " << dis[i] << Endl;
+        }
+    }
+}
+
+
+int32_t main() {
+    fastio;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    int t = 1;
+    //cin >> t;
+
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
