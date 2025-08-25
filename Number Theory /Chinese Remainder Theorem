@@ -1,0 +1,135 @@
+/**
+ *    author: Noman
+**/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll ;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+#define pan cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);
+// define values.
+#define MOD 1000000007
+#define PI 3.1415926535897932384626
+/* Bit-Stuff */
+#define get_set_bits(a) (__builtin_popcount(a))
+#define get_set_bitsll(a) ( __builtin_popcountll(a))
+#define get_trail_zero(a) (__builtin_ctz(a))
+#define get_lead_zero(a) (__builtin_clz(a))
+#define get_parity(a) (__builtin_parity(a))
+/*  Abbrevations  */
+#define ff first
+#define ss second
+#define mp make_pair
+#define pb push_back
+#define Endl "\n"
+// loops
+#define forin(arr,n) for(ll i=0;i<n;i++) cin>>arr[i];
+// sort
+#define all(V) (V).begin(),(V).end()
+#define srt(V) sort(all(V))
+#define srtGreat(V) sort(all(V),greater<ll>())
+
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+
+/*
+Strong Chinese Remainder Theorem (CRT):
+
+Given n linear congruences:
+
+    x ≡ a1 (mod m1)
+    x ≡ a2 (mod m2)
+    ...
+    x ≡ an (mod mn)
+
+where the moduli m1, m2, ..., mn are **not necessarily coprime**.
+
+- A solution x exists **iff** for every pair (mi, mj):
+        ai ≡ aj (mod gcd(mi, mj))
+  otherwise no solution exists.
+
+- If a solution exists, it is **unique modulo L**, where
+        L = lcm(m1, m2, ..., mn)
+
+- The Strong CRT algorithm merges equations two at a time using:
+        x = a1*(m2/g)*q + a2*(m1/g)*p  (mod lcm(m1, m2))
+  where g = gcd(m1,m2), and p,q satisfy the Extended Euclidean equation:
+        (m1/g)*p + (m2/g)*q = 1
+
+Time Complexity: O(n * log L)
+Space Complexity: O(n)
+*/
+
+
+ll gcd(ll a, ll b){
+    if(b == 0) return a;
+    return gcd(b,a%b);
+}
+
+ll Extended_Euclidean(ll a, ll b, ll &x, ll &y){ // O(log max(a,b))
+    if(b == 0){
+        x = 1;
+        y = 0;
+        return a;
+    }
+    ll x1, y1;
+    ll g = Extended_Euclidean(b,a%b,x1,y1);
+    x = y1;
+    y = x1-(a/b)*y1;
+    return g;
+}
+pair<ll,ll> CRT(vector<ll> A, vector<ll> M) { // O(n * log L), eikhane L = final modulo = LCM of all moduli
+    if(A.size()!=M.size()){
+        return {-1,-1};
+    }
+
+    ll a1=A[0];
+    ll m1=M[0];
+
+    for(int i=1;i<A.size();i++){
+        ll a2=A[i];
+        ll m2=M[i];
+
+        ll g = gcd(m1,m2);
+
+        if(a1%g!=a2%g){
+            return {-1,-1}; // kono solution nei
+        } 
+
+        ll p,q;
+        Extended_Euclidean(m1/g, m2/g, p, q);
+
+        ll mod = m1/g * m2;
+        ll x = (a1*(m2/g)*q + a2*(m1/g)*p) % mod;
+        if(x<0) x+=mod;
+        a1=x;
+        m1=mod;
+    }
+    return {a1,m1};
+}
+
+void solve() {
+    vector<ll> A = {2,8,2,3};
+    vector<ll> M = {6,9,5,7};
+
+    auto it = CRT(A,M);
+    cout<<it.ff<<" "<<it.ss<<Endl;
+}
+
+
+
+int32_t main() {
+    fastio;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    int t = 1;
+    //cin >> t;
+
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
