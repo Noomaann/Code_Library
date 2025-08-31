@@ -1,0 +1,90 @@
+/**
+*   author: Noman
+**/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll ;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+#define pan cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);
+// define values.
+#define MOD 1000000007
+#define PI 3.1415926535897932384626
+/* Bit-Stuff */
+#define get_set_bits(a) (__builtin_popcount(a))
+#define get_set_bitsll(a) ( __builtin_popcountll(a))
+#define get_trail_zero(a) (__builtin_ctz(a))
+#define get_lead_zero(a) (__builtin_clz(a))
+#define get_parity(a) (__builtin_parity(a))
+/*  Abbrevations  */
+#define ff first
+#define ss second
+#define mp make_pair
+#define pb push_back
+#define Endl "\n"
+// loops
+#define forin(arr,n) for(ll i=0;i<n;i++) cin>>arr[i];
+// sort
+#define all(V) (V).begin(),(V).end()
+#define srt(V) sort(all(V))
+#define srtGreat(V) sort(all(V),greater<ll>())
+
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+
+
+vector<vl> dp;
+vl v, wt;
+
+ll knap(int i, int val) {
+    if (val == 0) return 0; // val 0 hole kono value na niye o ta achive kora jay tai Weight o 0
+    if (i == 0) return 1e18; // kono item e jodi na thake tahole kivabe nibo ami ? tai INF diye rakhbo
+    if (dp[i][val] != -1) return dp[i][val];
+
+    if (val >= v[i - 1]) // jodi target val theke amdr v[i-1] er value choto hoy taholei shudhu matro amra value ta nite parbo
+        return dp[i][val] = min(
+                                knap(i - 1, val), // n-1 iteam ta nibo na
+                                knap(i - 1, val - v[i - 1]) + wt[i - 1] // n-1 iteam ta nibo
+                            );
+    else return dp[i][val] = knap(i - 1, val); // n-1 iteam ta nibo na
+}
+
+void solve() {
+    int n;
+    ll W;
+    cin >> n >> W;
+    v.assign(n, 0);
+    wt.assign(n, 0);
+    ll sum = 0;
+    for (int i = 0; i < n; i++) {
+        cin >> wt[i] >> v[i];
+        sum += v[i];
+    }
+
+    dp.assign(n + 1, vl(sum + 1, -1));
+
+    ll ans = 0;
+    for (int val = 0; val <= sum; val++) {
+        if (knap(n, val) <= W) ans = val; // 0 theke Sum porjonto shob gulo value ek ek kore check korbo
+        // ans = maximum achievable value under weight W nibo
+    }
+    cout << ans << Endl;
+}
+
+
+
+int32_t main() {
+    fastio;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    int t = 1;
+    //cin >> t;
+
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
