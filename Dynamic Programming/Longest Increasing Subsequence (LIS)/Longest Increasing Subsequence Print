@@ -1,0 +1,97 @@
+/**
+*   author: Noman
+**/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll ;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+#define pan cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);
+// define values.
+#define MOD 1000000007
+#define PI 3.1415926535897932384626
+/* Bit-Stuff */
+#define get_set_bits(a) (__builtin_popcount(a))
+#define get_set_bitsll(a) ( __builtin_popcountll(a))
+#define get_trail_zero(a) (__builtin_ctz(a))
+#define get_lead_zero(a) (__builtin_clz(a))
+#define get_parity(a) (__builtin_parity(a))
+/*  Abbrevations  */
+#define ff first
+#define ss second
+#define mp make_pair
+#define pb push_back
+#define Endl "\n"
+// loops
+#define forin(arr,n) for(ll i=0;i<n;i++) cin>>arr[i];
+// sort
+#define all(V) (V).begin(),(V).end()
+#define srt(V) sort(all(V))
+#define srtGreat(V) sort(all(V),greater<ll>())
+
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+
+
+void solve() {
+    int n;
+    cin >> n;               // array এর সাইজ ইনপুট
+
+    vi v(n);
+    forin(v, n)             // array ইনপুট
+
+    vi tail;                // LIS এর প্রতিটি length এর জন্য minimum last element রাখে
+    vi tail_idx;            // tail এ রাখা element এর আসল index
+    vi prev_idx(n, -1);     // LIS reconstruction এর জন্য পূর্বের index ট্র্যাক করে
+
+    // main loop
+    for (int i = 0; i < n; i++) {
+        int x = v[i];                                   // বর্তমান element
+        auto it = lower_bound(tail.begin(), tail.end(), x);
+        // tail এর মধ্যে x এর জায়গা খুঁজে বের করা (binary search O(log n))
+
+        int pos = it - tail.begin();                    // position বের করা
+
+        if (pos < tail.size()) {                        // আগের কোন position replace হবে
+            tail[pos] = x;                              // tail এ element আপডেট
+            tail_idx[pos] = i;                          // index আপডেট
+        }
+        else {                                          // নতুন element tail এ যোগ হবে
+            tail.pb(x);
+            tail_idx.pb(i);
+        }
+
+        if (pos > 0) prev_idx[i] = tail_idx[pos - 1];   // পূর্বের element track করা
+    }
+
+    // LIS reconstruct করা
+    vi a;
+    int idx = tail_idx.back();        // সর্বশেষ LIS এর index থেকে শুরু
+    while (idx != -1) {
+        a.pb(v[idx]);                 // LIS এ element যোগ করা
+        idx = prev_idx[idx];          // পূর্বের index এ যাওয়া
+    }
+    reverse(all(a));                  // উল্টানো (কারণ পিছন থেকে traverse করেছি)
+
+    cout << a.size() << Endl;         // LIS এর দৈর্ঘ্য প্রিন্ট করা
+    for (int it : a) cout << it << " "; // LIS এর elements প্রিন্ট করা
+    cout << Endl;
+}
+
+
+
+int32_t main() {
+    fastio;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    int t = 1;
+    //cin >> t;
+
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
