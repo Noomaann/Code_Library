@@ -38,7 +38,6 @@ void solve() {
     cin >> n;
     vi v(n);
     forin(v, n)
-    vi dp(n + 1, 1);
     vi a;
     for (int x : v) { // O(n log n)
         auto it = lower_bound(all(a), x); // binary search kore dekhte hobe x theke choto ba soman valo ache naki jodi na thake tahole amr LIS er moddhe sheta include hobe 
