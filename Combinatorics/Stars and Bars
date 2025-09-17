@@ -1,0 +1,98 @@
+/**
+ *    author: Noman
+**/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll ;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+#define pan cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);
+// define values.
+#define MOD 1000000007
+#define PI 3.1415926535897932384626
+/* Bit-Stuff */
+#define get_set_bits(a) (__builtin_popcount(a))
+#define get_set_bitsll(a) ( __builtin_popcountll(a))
+#define get_trail_zero(a) (__builtin_ctz(a))
+#define get_lead_zero(a) (__builtin_clz(a))
+#define get_parity(a) (__builtin_parity(a))
+/*  Abbrevations  */
+#define ff first
+#define ss second
+#define mp make_pair
+#define pb push_back
+#define Endl "\n"
+// loops
+#define forin(arr,n) for(ll i=0;i<n;i++) cin>>arr[i];
+// sort
+#define all(V) (V).begin(),(V).end()
+#define srt(V) sort(all(V))
+#define srtGreat(V) sort(all(V),greater<ll>())
+ 
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+/*
+    Stars and Bars:
+    ≥0 object per box → (n+k-1 / k-1)
+    ≥1 object per box → (n-1 / k-1)
+*/
+ 
+const int N = 2e6 + 3;
+ll a[N];
+ 
+void pre() {
+    a[0] = 1;
+    ll fact = 1;
+    for (ll i = 1; i < N; i++) {
+        fact = (fact * i) % MOD;
+        a[i] = fact % MOD;
+    }
+}
+ 
+ll expo(ll base, ll pow) {
+    base = base % MOD;
+    ll res = 1;
+    while (pow) {
+        if (pow & 1) {
+            res = res * base % MOD;
+        }
+        base = base * base % MOD;
+        pow >>= 1;
+    }
+    return res % MOD;
+}
+ 
+void solve() {
+    ll chil, app;
+    cin >> chil >> app;
+    ll x = (chil + app - 1);
+    ll y = chil - 1;
+    ll fx = a[x];
+    ll fy = a[y];
+    ll fxy = a[(x - y)];
+ 
+    ll ans = expo(fy, MOD - 2);
+    ll ans1 = expo(fxy, MOD - 2);
+ 
+    ll ans2 = (ans * ans1) % MOD;
+    cout << (ans2 * fx) % MOD;
+}
+ 
+ 
+ 
+int32_t main() {
+    fastio;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+ 
+    int t = 1;
+    //cin >> t;
+    pre();
+ 
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
