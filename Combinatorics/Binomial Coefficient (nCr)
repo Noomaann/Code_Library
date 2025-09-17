@@ -1,0 +1,89 @@
+/**
+ *    author: Noman
+**/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll ;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+#define pan cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);
+// define values.
+#define MOD 1000000007
+#define PI 3.1415926535897932384626
+/* Bit-Stuff */
+#define get_set_bits(a) (__builtin_popcount(a))
+#define get_set_bitsll(a) ( __builtin_popcountll(a))
+#define get_trail_zero(a) (__builtin_ctz(a))
+#define get_lead_zero(a) (__builtin_clz(a))
+#define get_parity(a) (__builtin_parity(a))
+/*  Abbrevations  */
+#define ff first
+#define ss second
+#define mp make_pair
+#define pb push_back
+#define Endl "\n"
+// loops
+#define forin(arr,n) for(ll i=0;i<n;i++) cin>>arr[i];
+// sort
+#define all(V) (V).begin(),(V).end()
+#define srt(V) sort(all(V))
+#define srtGreat(V) sort(all(V),greater<ll>())
+ 
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+ 
+const ll N = 1e6 + 3;
+ll a[N];
+
+void pre() { // agei factorial pre-calculate kore rakhte hobe 
+    a[0] = 1;
+    for (ll i = 1; i < N; i++) {
+        a[i] = (a[i - 1] * i) % MOD;
+    }
+}
+
+ll expo(ll base, ll pow, ll m) { // Binary Exponentiation
+    base = base % m;
+    ll res = 1;
+    while (pow > 0) {
+        if (pow & 1) {
+            res = res * base % m;
+        }
+        base = base * base % m;
+        pow >>= 1;
+    }
+    return res % m;
+}
+ 
+void solve() {
+    ll q;
+    cin >> q;
+    while (q--) {
+        int n, r;
+        cin >> n >> r;
+
+        ll nf = a[n];                            // n! modulo MOD
+        ll rf = expo(a[r], MOD - 2, MOD);       // r! এর modular inverse (Fermat’s Little Theorem)
+        ll nrf = expo(a[n - r], MOD - 2, MOD); // (n-r)! এর modular inverse
+
+        ll u = (rf * nrf) % MOD;  // denominator: (r! * (n-r)!)^-1 mod MOD
+
+        cout << (u * nf) % MOD << Endl;  // nCr = n! / (r!*(n-r)!) mod MOD
+    }
+}
+ 
+ 
+int32_t main() {
+    fastio;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+ 
+    int t = 1;
+    //cin >> t;
+    pre();
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
